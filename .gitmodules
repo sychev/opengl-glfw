@@ -1,0 +1,9 @@
+[submodule "glfw"]
+	path = glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "reactphysics3d"]
+	path = reactphysics3d
+	url = git@github.com:DanielChappuis/reactphysics3d.git
+[submodule "imgui"]
+	path = imgui
+	url = git@github.com:ocornut/imgui.git
