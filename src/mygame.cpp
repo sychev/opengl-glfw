@@ -23,6 +23,37 @@ static void glfw_error_callback(int error, const char *description)
 
 int main(int, char **)
 {
+    // Physics engine demo START
+    PhysicsCommon physicsCommon;
+
+    // Create a physics world
+    PhysicsWorld *world = physicsCommon.createPhysicsWorld();
+
+    // Create a rigid body in the world
+    Vector3 position(0, 20, 0);
+    Quaternion orientation = Quaternion::identity();
+    Transform transform(position, orientation);
+    RigidBody *body = world->createRigidBody(transform);
+
+    const decimal timeStep = 1.0f / 60.0f;
+
+    // Step the simulation a few steps
+    for (int i=0; i < 20; i++)
+    {
+
+        world->update(timeStep);
+
+        // Get the updated position of the body
+        const Transform &transform = body->getTransform();
+        const Vector3 &position = transform.getPosition();
+
+        // Display the position of the body
+        std::cout << "Body Position: (" << position.x << ", " <<
+                  position.y << ", " << position.z << ")" << std::endl;
+    }
+    // Physics engine demo END
+
+
     // Setup window
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
