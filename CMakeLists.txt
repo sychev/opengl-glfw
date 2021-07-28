@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(mygame)
 
+set (CMAKE_CXX_STANDARD 11)
+
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
