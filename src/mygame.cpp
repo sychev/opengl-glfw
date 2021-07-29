@@ -1,11 +1,11 @@
+#include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
+
 // imgui headers
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
-
-#include <glad/glad.h>
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
 
 #include "linmath.h"
 
@@ -18,6 +18,39 @@ using namespace reactphysics3d;
 
 static const char *GetDejaVuSansMono_compressed_data_base85();
 // static const char *GetNotoSansCJKjp_Regular_compressed_data_base85();
+
+//static const struct
+//{
+//    float x, y;
+//    float r, g, b;
+//}
+//
+//vertices[3] =
+//{
+//    { -0.6f, -0.4f, 1.f, 0.f, 0.f },
+//    {  0.6f, -0.4f, 0.f, 1.f, 0.f },
+//    {   0.f,  0.6f, 0.f, 0.f, 1.f }
+//};
+//
+//static const char *vertex_shader_text =
+//    "#version 110\n"
+//    "uniform mat4 MVP;\n"
+//    "attribute vec3 vCol;\n"
+//    "attribute vec2 vPos;\n"
+//    "varying vec3 color;\n"
+//    "void main()\n"
+//    "{\n"
+//    "    gl_Position = MVP * vec4(vPos, 0.0, 1.0);\n"
+//    "    color = vCol;\n"
+//    "}\n";
+//
+//static const char *fragment_shader_text =
+//    "#version 110\n"
+//    "varying vec3 color;\n"
+//    "void main()\n"
+//    "{\n"
+//    "    gl_FragColor = vec4(color, 1.0);\n"
+//    "}\n";
 
 static void glfw_error_callback(int error, const char *description)
 {
@@ -69,6 +102,7 @@ int main(int, char **)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+    std::cout << "GL ES 2.0 + GLSL 100" << std::endl;
 #elif defined(__APPLE__)
     // GL 3.2 + GLSL 150
     const char *glsl_version = "#version 150";
@@ -76,6 +110,7 @@ int main(int, char **)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Required on Mac
+    std::cout << "GL 3.2 + GLSL 150" << std::endl;
 #else
     // GL 3.0 + GLSL 130
     const char *glsl_version = "#version 130";
@@ -83,6 +118,7 @@ int main(int, char **)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // 3.2+ only
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // 3.0+ only
+    std::cout << "GL 3.0 + GLSL 130" << std::endl;
 #endif
 
     // Create window with graphics context
@@ -92,32 +128,42 @@ int main(int, char **)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // Enable vsync
 
+
+
     // Initialize OpenGL loader
 #if defined(IMGUI_IMPL_OPENGL_LOADER_GL3W)
     bool err = gl3wInit() != 0;
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GL3W" << std::endl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLEW)
     bool err = glewInit() != GLEW_OK;
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GLEW" << std::endl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
     bool err = gladLoadGL() == 0;
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GLAD" << std::endl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLAD2)
     bool err = gladLoadGL(glfwGetProcAddress) == 0; // glad2 recommend using the windowing library loader instead of the (optionally) bundled one.
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GLAD2" << std::endl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING2)
     bool err = false;
     glbinding::Binding::initialize();
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GLBINDING2" << std::endl;
 #elif defined(IMGUI_IMPL_OPENGL_LOADER_GLBINDING3)
     bool err = false;
     glbinding::initialize([](const char *name)
     {
         return (glbinding::ProcAddress)glfwGetProcAddress(name);
     });
+    std::cout << "IMGUI_IMPL_OPENGL_LOADER_GLBINDING3" << std::endl;
 #else
     bool err = false; // If you use IMGUI_IMPL_OPENGL_LOADER_CUSTOM, your loader is likely to requires some form of initialization.
+    std::cout << "Initialize OpenGL loader not happened." << std::endl;
 #endif
     if (err)
     {
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
         return 1;
     }
+
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -160,6 +206,43 @@ int main(int, char **)
     bool show_demo_window = true;
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
+//    // GLSL program
+//    GLuint vertex_buffer, vertex_shader, fragment_shader, program;
+//    GLint mvp_location, vpos_location, vcol_location;
+//
+//
+//    glGenBuffers(1, &vertex_buffer);
+//    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+//    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+//
+//    vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+//    glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+//    glCompileShader(vertex_shader);
+//
+//    fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+//    glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+//    glCompileShader(fragment_shader);
+//
+//    program = glCreateProgram();
+//    glAttachShader(program, vertex_shader);
+//    glAttachShader(program, fragment_shader);
+//    glLinkProgram(program);
+//
+//    mvp_location = glGetUniformLocation(program, "MVP");
+//    vpos_location = glGetAttribLocation(program, "vPos");
+//    vcol_location = glGetAttribLocation(program, "vCol");
+//
+//    glEnableVertexAttribArray(vpos_location);
+//    glVertexAttribPointer(vpos_location, 2, GL_FLOAT, GL_FALSE,
+//                          sizeof(vertices[0]), (void *) 0);
+//    glEnableVertexAttribArray(vcol_location);
+//    glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
+//                          sizeof(vertices[0]), (void *) (sizeof(float) * 2));
+//
+//    // GLSL program end
+
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -221,6 +304,28 @@ int main(int, char **)
         glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+
+//        // GLSL program start
+//        float ratio;
+//        int width, height;
+//        mat4x4 m, p, mvp;
+//
+//        glfwGetFramebufferSize(window, &width, &height);
+//        ratio = width / (float) height;
+//
+//        glViewport(0, 0, width, height);
+//        glClear(GL_COLOR_BUFFER_BIT);
+//
+//        mat4x4_identity(m);
+//        mat4x4_rotate_Z(m, m, (float) glfwGetTime());
+//        mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+//        mat4x4_mul(mvp, p, m);
+//
+//        glUseProgram(program);
+//        glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat *) mvp);
+//        glDrawArrays(GL_TRIANGLES, 0, 3);
+//        // GLSL program end
 
         glfwSwapBuffers(window);
     }
