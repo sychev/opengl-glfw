@@ -1,5 +1,5 @@
-$mygame_directory = "mygame"
-$mygame_build_directory = "mygame-build.win64"
+$mygame_directory = Split-Path -Path (Get-Location) -Leaf
+$mygame_build_directory = "$mygame_directory-build.win64"
 $clean = $false
 
 astyle --options=.astylerc --recursive ./src/*.cpp,*.h
@@ -26,6 +26,6 @@ cmake --build .
 #     Move-Item -Path "glfw-3.3.4\src\glfw3.dll" -Destination $glfwDllDestination
 #     Move-Item -Path "reactphysics3d\libreactphysics3d.dll" -Destination $glfwDllDestination
 # }
-.\mygame.exe
+.\main.exe
 
 cd ..\$mygame_directory

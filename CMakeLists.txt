@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.12)
-project(mygame)
+project(main)
 
 set (CMAKE_CXX_STANDARD 11)
 
@@ -37,9 +37,13 @@ set(IMGUISOURCES
     imgui/backends/imgui_impl_opengl3.h
     imgui/backends/imgui_impl_opengl3.cpp
 )
-set(SOURCES glad/src/glad.c src/mygame.cpp)
 
-add_executable(mygame ${SOURCES} ${IMGUISOURCES})
+set(SOURCES
+    glad/src/glad.c
+    src/main.cpp
+)
 
-target_link_libraries(mygame glfw ${GLFW_LIBRARIES})
-target_link_libraries(mygame reactphysics3d) 
+add_executable(main ${SOURCES} ${IMGUISOURCES})
+
+target_link_libraries(main glfw ${GLFW_LIBRARIES})
+target_link_libraries(main reactphysics3d) 
