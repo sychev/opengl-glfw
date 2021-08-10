@@ -24,6 +24,19 @@ static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
+static void HelpMarker(const char* desc)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+
 int main(int, char**) {
     // Physics engine demo START
     PhysicsCommon physicsCommon;
@@ -169,6 +182,8 @@ int main(int, char**) {
     bool show_another_window = false;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
+    static bool full_screen_window_open = true;
+
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         // Poll and handle events (inputs, window resize, etc.)
@@ -187,11 +202,45 @@ int main(int, char**) {
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
+        if (full_screen_window_open)
+        {
+            static bool use_work_area = true;
+            static ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
+
+            // We demonstrate using the full viewport area or the work area (without menu-bars, task-bars etc.)
+            // Based on your use case you may want one of the other.
+            const ImGuiViewport* viewport = ImGui::GetMainViewport();
+            ImGui::SetNextWindowPos(use_work_area ? viewport->WorkPos : viewport->Pos);
+            ImGui::SetNextWindowSize(use_work_area ? viewport->WorkSize : viewport->Size);
+
+            ImGui::SetNextWindowBgAlpha(1.0);
+            if (ImGui::Begin("Example: Fullscreen window", &full_screen_window_open, flags))
+            {
+                ImGui::Checkbox("Use work area instead of main area", &use_work_area);
+                ImGui::SameLine();
+                HelpMarker("Main Area = entire viewport,\nWork Area = entire viewport minus sections used by the main menu bars, task bars etc.\n\nEnable the main-menu bar in Examples menu to see the difference.");
+
+                ImGui::CheckboxFlags("ImGuiWindowFlags_NoBackground", &flags, ImGuiWindowFlags_NoBackground);
+                ImGui::CheckboxFlags("ImGuiWindowFlags_NoDecoration", &flags, ImGuiWindowFlags_NoDecoration);
+                ImGui::Indent();
+                ImGui::CheckboxFlags("ImGuiWindowFlags_NoTitleBar", &flags, ImGuiWindowFlags_NoTitleBar);
+                ImGui::CheckboxFlags("ImGuiWindowFlags_NoCollapse", &flags, ImGuiWindowFlags_NoCollapse);
+                ImGui::CheckboxFlags("ImGuiWindowFlags_NoScrollbar", &flags, ImGuiWindowFlags_NoScrollbar);
+                ImGui::Unindent();
+
+                if (full_screen_window_open && ImGui::Button("Close this window"))
+                    full_screen_window_open = false;
+            }
+            ImGui::End();
+
+        }
+
         // 2. Show a simple window that we create ourselves. We use a Begin/End pair to created a named window.
         {
             static float f = 0.0f;
             static int counter = 0;
 
+            ImGui::SetNextWindowBgAlpha(1.0);
             ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
@@ -207,11 +256,16 @@ int main(int, char**) {
             ImGui::Text("counter = %d", counter);
 
             ImGui::Text(u8"Hello, Алексей Сычев. CJK font needed (世界 こんにちは). Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+            if (!full_screen_window_open && ImGui::Button("Open fullscreen window"))
+                full_screen_window_open = true;
+
             ImGui::End();
         }
 
         // 3. Show another simple window.
         if (show_another_window) {
+            ImGui::SetNextWindowBgAlpha(1.0);
             ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
             ImGui::Text("Hello from another window!");
             if (ImGui::Button("Close Me"))
