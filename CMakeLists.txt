@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12)
 set (CMAKE_CXX_STANDARD 11)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/cmake")
+
 project(main)
 
 # GLFW
@@ -44,7 +46,6 @@ set(SOURCES
 )
 
 # Steamworks SDK
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/cmake")
 add_subdirectory(steamworkssdk/cmake)
 include_directories(steamworkssdk/steamworks_sdk/public/steam)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/steamworks_sdk/redistributable_bin/win64)
