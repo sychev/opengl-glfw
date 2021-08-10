@@ -24,11 +24,9 @@ static void glfw_error_callback(int error, const char* description) {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-static void HelpMarker(const char* desc)
-{
+static void HelpMarker(const char* desc) {
     ImGui::TextDisabled("(?)");
-    if (ImGui::IsItemHovered())
-    {
+    if (ImGui::IsItemHovered()) {
         ImGui::BeginTooltip();
         ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
         ImGui::TextUnformatted(desc);
@@ -202,8 +200,7 @@ int main(int, char**) {
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-        if (full_screen_window_open)
-        {
+        if (full_screen_window_open) {
             static bool use_work_area = true;
             static ImGuiWindowFlags flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings;
 
@@ -214,8 +211,7 @@ int main(int, char**) {
             ImGui::SetNextWindowSize(use_work_area ? viewport->WorkSize : viewport->Size);
 
             ImGui::SetNextWindowBgAlpha(1.0);
-            if (ImGui::Begin("Example: Fullscreen window", &full_screen_window_open, flags))
-            {
+            if (ImGui::Begin("Example: Fullscreen window", &full_screen_window_open, flags)) {
                 ImGui::Checkbox("Use work area instead of main area", &use_work_area);
                 ImGui::SameLine();
                 HelpMarker("Main Area = entire viewport,\nWork Area = entire viewport minus sections used by the main menu bars, task bars etc.\n\nEnable the main-menu bar in Examples menu to see the difference.");
