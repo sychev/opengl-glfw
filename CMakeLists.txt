@@ -1,12 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 set (CMAKE_CXX_STANDARD 11)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/SteamworksSDKCI/cmake")
 
 project(main)
-
-# Steamworks SDK
-add_subdirectory(SteamworksSDKCI/cmake)
-include_directories(SteamworksSDKCI/steamworks_sdk/public/steam)
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -48,6 +43,12 @@ set(SOURCES
     src/main.cpp
 )
 
+# Steamworks SDK
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/cmake")
+add_subdirectory(steamworkssdk/cmake)
+include_directories(steamworkssdk/steamworks_sdk/public/steam)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/steamworks_sdk/redistributable_bin/win64)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/steamworks_sdk/redistributable_bin/win64)
 find_package(STEAMWORKSSDK REQUIRED)
 
 add_executable(main ${SOURCES} ${IMGUISOURCES})
