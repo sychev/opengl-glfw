@@ -7,6 +7,3 @@
 [submodule "imgui"]
 	path = imgui
 	url = git@github.com:ocornut/imgui.git
-[submodule "steamworkssdk"]
-	path = steamworkssdk
-	url = git@github.com:julianxhokaxhiu/SteamworksSDKCI.git
