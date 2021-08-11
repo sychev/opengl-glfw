@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 set (CMAKE_CXX_STANDARD 11)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/cmake")
-
 project(main)
 
 # GLFW
@@ -21,6 +19,21 @@ include_directories(imgui/backends)
 # Physics libr
 add_subdirectory(reactphysics3d)
 include_directories(reactphysics3d/include)
+
+# Steamworks SDK
+if(WIN32)
+    find_library(STEAMSDK_LIB steam_api64 PATHS steamworks_sdk/redistributable_bin/win64)
+endif()
+
+if(APPLE)
+    find_library(STEAMSDK_LIB steam_api PATHS steamworks_sdk/redistributable_bin/osx)
+endif()
+
+if(UNIX AND NOT APPLE)
+    find_library(STEAMSDK_LIB steam_api PATHS steamworks_sdk/redistributable_bin/linux64)
+endif()
+
+include_directories(steamworks_sdk/public)
 
 set(IMGUISOURCES
     imgui/imstb_truetype.h
@@ -45,15 +58,12 @@ set(SOURCES
     src/main.cpp
 )
 
-# Steamworks SDK
-add_subdirectory(steamworkssdk/cmake)
-include_directories(steamworkssdk/steamworks_sdk/public/steam)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/steamworks_sdk/redistributable_bin/win64)
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/steamworkssdk/steamworks_sdk/redistributable_bin/win64)
-find_package(STEAMWORKSSDK REQUIRED)
-
 add_executable(main ${SOURCES} ${IMGUISOURCES})
 
-target_link_libraries(main glfw ${GLFW_LIBRARIES})
-target_link_libraries(main reactphysics3d)
-target_link_libraries(main STEAMWORKSSDK::STEAMWORKSSDK)
+target_link_libraries(main
+glfw
+${GLFW_LIBRARIES}
+reactphysics3d
+${STEAMSDK_LIB}
+)
+

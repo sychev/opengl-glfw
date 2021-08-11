@@ -18,6 +18,8 @@
 // ReactPhysics3D namespace
 using namespace reactphysics3d;
 
+#include <steam/steam_api.h>
+
 static const char* GetDejaVuSansMono_compressed_data_base85();
 
 static void glfw_error_callback(int error, const char* description) {
@@ -36,6 +38,15 @@ static void HelpMarker(const char* desc) {
 }
 
 int main(int, char**) {
+    // Steamworks API example
+    if ( !SteamAPI_Init() ) {
+        std::cout << "SteamAPI_Init() failed\n";
+        std::cout << "Fatal Error", "Steam must be running to play this game (SteamAPI_Init() failed).\n";
+        return EXIT_FAILURE;
+    }
+    // Steamworks API example end
+
+
     // Physics engine demo START
     PhysicsCommon physicsCommon;
 
