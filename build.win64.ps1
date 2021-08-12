@@ -21,11 +21,10 @@ cd $mygame_build_directory
 cmake ..\$mygame_directory -G "MinGW Makefiles"
 cmake --build .
 
-# $glfwDllDestination = ".\glfw3.dll"
-# if(!(Test-Path $glfwDllDestination)) {
-#     Move-Item -Path "glfw-3.3.4\src\glfw3.dll" -Destination $glfwDllDestination
-#     Move-Item -Path "reactphysics3d\libreactphysics3d.dll" -Destination $glfwDllDestination
-# }
+$steamDllDestination = ".\steam_api64.dll"
+if(!(Test-Path $steamDllDestination)) {
+    Copy-Item -Path "..\$mygame_directory\steamworks_sdk\redistributable_bin\win64\steam_api64.dll" -Destination $steamDllDestination
+}
 .\main.exe
 
 cd ..\$mygame_directory

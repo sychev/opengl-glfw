@@ -22,7 +22,9 @@ include_directories(reactphysics3d/include)
 
 # Steamworks SDK
 if(WIN32)
-    find_library(STEAMSDK_LIB steam_api64 PATHS steamworks_sdk/redistributable_bin/win64)
+    find_library(STEAMSDK_LIB steam_api64 PATHS steamworks_sdk/redistributable_bin/win64/)
+    # add_library(STEAMSDK_LIB STATIC IMPORTED)
+    # set_property(TARGET STEAMSDK_LIB PROPERTY IMPORTED_LOCATION steamworks_sdk/redistributable_bin/win64/steam_api64.dll.a)
 endif()
 
 if(APPLE)
