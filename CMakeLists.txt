@@ -16,7 +16,7 @@ include_directories(glad/include)
 include_directories(imgui)
 include_directories(imgui/backends)
 
-# Physics libr
+# Physics library
 add_subdirectory(reactphysics3d)
 include_directories(reactphysics3d/include)
 
